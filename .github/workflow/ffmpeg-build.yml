@@ -1,0 +1,52 @@
+name: Compile FFmpeg with Vorbis codec (Windows)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up MSYS2
+        run: |
+          choco install msys2
+          refreshenv
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm mingw-w64-x86_64-gcc mingw-w64-x86_64-pkg-config
+
+      - name: Install dependencies
+        run: |
+          pacman -S --noconfirm git yasm nasm make mingw-w64-x86_64-vorbis
+
+      - name: Clone FFmpeg repository
+        run: git clone --depth 1 https://git.ffmpeg.org/ffmpeg.git ffmpeg
+
+      - name: Configure FFmpeg with only Vorbis
+        run: |
+          cd ffmpeg
+          ./configure --enable-libvorbis --disable-everything --enable-ffplay --enable-vorbis --disable-encoders --disable-decoders --disable-hwaccels
+
+      - name: Build FFmpeg
+        run: |
+          cd ffmpeg
+          make -j$(nproc)
+
+      - name: Install FFmpeg
+        run: |
+          cd ffmpeg
+          make install
+
+      - name: Upload FFmpeg Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ffmpeg-vorbis-build
+          path: ffmpeg
