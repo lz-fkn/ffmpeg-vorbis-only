@@ -16,10 +16,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up MSYS2
-        run: |
-          choco install msys2
-          refreshenv
+      - name: Install MSYS2
+        run: choco install msys2
 
       - name: Install dependencies in MSYS2
         run: |
