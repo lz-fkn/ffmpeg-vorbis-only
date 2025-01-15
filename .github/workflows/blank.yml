@@ -21,6 +21,10 @@ jobs:
 
       - name: Initialize MSYS2 and install dependencies
         run: |
+          # Add MSYS2 to PATH
+          echo "Adding MSYS2 to PATH"
+          echo "C:\\tools\\msys64\\usr\\bin" >> $GITHUB_PATH
+          # Run pacman to install dependencies
           C:\tools\msys64\usr\bin\bash.exe -c "pacman -Syu --noconfirm"
           C:\tools\msys64\usr\bin\bash.exe -c "pacman -S --noconfirm git yasm nasm make mingw-w64-x86_64-vorbis"
 
