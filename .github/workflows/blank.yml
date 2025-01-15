@@ -46,7 +46,7 @@ jobs:
           make install
 
       - name: Upload FFmpeg Build Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ffmpeg-vorbis-build
           path: ffmpeg
